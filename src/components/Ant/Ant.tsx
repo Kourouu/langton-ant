@@ -1,10 +1,5 @@
-import './Ant.css'
+import "./Ant.css";
 
-export const Ant = ({className}: {className: string}) => {
-  const move = () => null;
-
-  return (
-    <div  className={`ant ${className}`}></div>  )
-}
-
-
+export const Ant = ({ className }: { className: string }) => {
+  return <div className={`ant ${className}`}></div>;
+};
