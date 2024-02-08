@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Ant } from "../Ant/Ant";
 
@@ -58,17 +58,25 @@ export const Cell = ({ x, y }: { x: number; y: number }) => {
     return orientation === 0 ? 270 : orientation - 90;
   };
 
-  setTimeout(() => {
+  setInterval(() => {
+    console.log(isCurrentCell);
+    // if (isCurrentCell) {
+    console.log("interval");
     setCurrentPosition(calculateNextPosition(currentAntPosition, orientation));
+    // }
+  }, 5000);
+  console.log(currentAntPosition);
+
+  useEffect(() => {
     if (isCurrentCell) {
+      toggleBackgroundColor();
       console.log(orientation);
       console.log(cellRef.current?.style.backgroundColor);
-      toggleBackgroundColor();
     }
     setOrientation(
       calculateNextOrientation(cellRef.current?.style.backgroundColor)
     );
-  }, 1500);
+  }, [currentAntPosition]);
 
   return (
     <div
