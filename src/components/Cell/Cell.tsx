@@ -3,11 +3,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Ant } from "../Ant/Ant";
 
 import "./Cell.css";
+import { useAntStore } from "../../store/useAntStore";
 
 export const Cell = ({ x, y }: { x: number; y: number }) => {
-  const [currentAntPosition, setCurrentPosition] = useState({ x: 5, y: 5 });
-  const [orientation, setOrientation] = useState(0);
-  const [backgroundColor, setBackgroundColor] = useState("black");
+  const [backgroundColor, setBackgroundColor] = useState("white");
+  const { position, orientation, updateOrientation, updatePosition } =
+    useAntStore();
 
   const cellRef = useRef<HTMLInputElement>(null);
 
@@ -15,8 +16,8 @@ export const Cell = ({ x, y }: { x: number; y: number }) => {
     () => setBackgroundColor(backgroundColor == "white" ? "black" : "white"),
     [backgroundColor]
   );
-  const isCurrentCell =
-    currentAntPosition.x === x && currentAntPosition.y === y;
+  const isCurrentCell = position.x === x && position.y === y;
+  if (isCurrentCell) console.log(isCurrentCell);
 
   const className = (): string => {
     switch (orientation) {
@@ -58,25 +59,23 @@ export const Cell = ({ x, y }: { x: number; y: number }) => {
     return orientation === 0 ? 270 : orientation - 90;
   };
 
-  setInterval(() => {
-    console.log(isCurrentCell);
-    // if (isCurrentCell) {
-    console.log("interval");
-    setCurrentPosition(calculateNextPosition(currentAntPosition, orientation));
-    // }
-  }, 5000);
-  console.log(currentAntPosition);
-
-  useEffect(() => {
-    if (isCurrentCell) {
+  if (isCurrentCell) {
+    setInterval(() => {
+      console.log(isCurrentCell);
+      console.log("interval");
+      console.log(calculateNextPosition(position, orientation));
       toggleBackgroundColor();
-      console.log(orientation);
-      console.log(cellRef.current?.style.backgroundColor);
-    }
-    setOrientation(
-      calculateNextOrientation(cellRef.current?.style.backgroundColor)
-    );
-  }, [currentAntPosition]);
+      updatePosition(calculateNextPosition(position, orientation));
+      updateOrientation(
+        calculateNextOrientation(cellRef.current?.style.backgroundColor)
+      );
+    }, 1500);
+  }
+
+  // useEffect(() => {
+  //   if (isCurrentCell) {
+  //   }
+  // }, [position]);
 
   return (
     <div
